@@ -14,13 +14,19 @@ players = {}
 
 def listen_server():
     global players
+    buffer = ""
     while True:
         try:
             data = sock.recv(4096)
             if not data:
                 break
-            players = json.loads(data.decode())
-        except:
+            buffer += data.decode()
+            while "\n" in buffer:
+                message, buffer = buffer.split("\n", 1)
+                if message.strip():
+                    players = json.loads(message)
+        except Exception as e:
+            print("Erreur de réception :", e)
             break
 
 threading.Thread(target=listen_server, daemon=True).start()

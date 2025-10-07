@@ -23,13 +23,13 @@ players = {}
 lock = threading.Lock()
 
 def broadcast(state):
-    """Envoie l'état du jeu à tous les clients connectés"""
-    data = json.dumps(state).encode()
+    data = (json.dumps(state) + "\n").encode()
     for conn in clients.values():
         try:
             conn.sendall(data)
         except:
             pass
+
 
 def handle_client(conn, addr, player_id):
     print(f"[+] Nouveau joueur {player_id} depuis {addr}")
